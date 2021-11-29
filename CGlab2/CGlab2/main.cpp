@@ -47,7 +47,6 @@ void lineDDA(int x0, int y0, int x1, int y1)
 	if (abs(dx) > abs(dy))
 	{
 		if (x0 <= x1) { x = x0; xm = x1; y = y0; ym = y1; }
-		showStartAndEnd(x, y, xm, ym);
 		for (x; x <= xm; x++)
 		{
 			glBegin(GL_POINTS);
@@ -59,7 +58,6 @@ void lineDDA(int x0, int y0, int x1, int y1)
 	else
 	{
 		if (y0 <= y1) { x = x0; xm = x1; y = y0; ym = y1; }
-		showStartAndEnd(x, y, xm, ym);
 		for (y; y <= ym; y++)
 		{
 			glBegin(GL_POINTS);
@@ -236,22 +234,29 @@ void circleBresenham(int xc, int yc, int r) {
 	}
 }
 
+static int times = 0;
+
 void myDisplay(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	int n = 100;// 线的条数
+	times++;
+	if (times > 100) {
+		times = 0;
+	}
 	for (int i = 0; i < n; i++)
 	{
 		//lineOpenGL(400, 250, 200*cos(2*PI/n*i)+400, 200*sin(2*PI/n*i)+250);
-		//lineDDA(400, 250, 200 * cos(2 * PI / n * i) + 400, 200 * sin(2 * PI / n * i) + 250);
-		glColor3f(0.0f, 1.0f, 0.0f);
-		lineBresenham(400, 250, 200 * cos(2 * PI / n * i) + 400, 200 * sin(2 * PI / n * i) + 250);
 		//glColor3f(0.0f, 1.0f, 0.0f);
-		//circleMid(200, 200, 100);
-		//glColor3f(1.0f, 0.0f, 0.0f);
-		//circleBresenham(400, 200, 100);
+		//lineBresenham(700, 250, 150 * cos(2 * PI / n * i) + 400, 150 * sin(2 * PI / n * i) + 250);
 		//glColor3f(0.0f, 0.0f, 1.0f);
-		//lineBresenham(400, 250, 200, 250);
+		//lineDDA(400, 250, 200 * cos(2 * PI / n * i) + 400, 200 * sin(2 * PI / n * i) + 250);
+		//glColor3f(1.0f, 0.0f, 0.0f);
+		//lineMid(400, 150, 200 * cos(2 * PI / n * i) + 500, 200 * sin(2 * PI / n * i) + 250);
+		glColor3f(1.0f, 0.0f, 1.0f);
+		circleBresenham(300, 200, 100);
+		//glColor3f(0.0f, 1.0f, 1.0f);
+		//circleMid(600, 200, 100);
 	}
 
 	// 强制刷新缓冲，保证绘图命令将被执行，而不是存储在缓冲区中等待其他的OpenGL命令
