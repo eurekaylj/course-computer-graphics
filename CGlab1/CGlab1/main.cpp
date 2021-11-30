@@ -97,6 +97,19 @@ void quitOnClickMouseLeftButton(int key, int state, int x, int y) {
     }
 }
 
+// 按 Q 键时退出程序
+void quitOnPressKeyboardQ(unsigned char key, int x, int y) {
+    switch (key) {
+    case 033:
+    case 'Q':
+    case 'q':
+        exit(0);
+        break;
+    default:
+        break;
+    }
+}
+
 int main(int argc, char** argv) {
     // 这个函数用来初始化GLUT库
     glutInit(&argc, argv);
@@ -119,6 +132,8 @@ int main(int argc, char** argv) {
     glClearColor(0.9, 0.9, 0.9, 1);
     // 注册鼠标事件处理函数
     glutMouseFunc(quitOnClickMouseLeftButton);
+    // 注册键盘事件处理函数
+    glutKeyboardFunc(quitOnPressKeyboardQ);
     // 程序循环
     glutMainLoop();
     return 0;
