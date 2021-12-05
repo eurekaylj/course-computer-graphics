@@ -198,7 +198,7 @@ void circleMid(int xc, int yc, int r) {
 		glVertex2i(-y + xc, -x + yc);
 		glVertex2i(-x + xc, y + yc);
 		glVertex2i(-y + xc, x + yc);
-		
+		glEnd();
 	}
 }
 
