@@ -198,52 +198,78 @@ void circleMid(int xc, int yc, int r) {
 		glVertex2i(-y + xc, -x + yc);
 		glVertex2i(-x + xc, y + yc);
 		glVertex2i(-y + xc, x + yc);
-		glEnd();
+		
 	}
 }
 
 // Bresenham画圆算法
-void circleBresenham(int xc, int yc, int r) {
-	int x, y, d;
-	x = 0;
-	y = r;
-	d = 3 - 2 * r;
-	glVertex2i(x + xc, y + yc);
-	while (x < y)
+void circleBresenham(int x0, int y0, int r)
+{
+	int x = 0;
+	int y = r;
+	int d = 2 * (1 - r);
+	int d1 = 0;
+	int d2 = 0;
+	int direction;
+	while (y >= 0)
 	{
+		glBegin(GL_POINTS);
+		glVertex2i(x0 + x, y0 + y);
+		glVertex2i(x0 + x, y0 - y);
+		glVertex2i(x0 - x, y0 - y);
+		glVertex2i(x0 - x, y0 + y);
+		glEnd();
 		if (d < 0)
 		{
-			d = d + 4 * x + 6;
+			d1 = 2 * (d + y) - 1;
+			if (d1 < 0)
+			{
+				direction = 1;
+			}
+			else
+			{
+				direction = 2;
+			}
+		}
+		else if (d > 0)
+		{
+			d2 = 2 * (d - x) - 1;
+			if (d2 < 0)
+			{
+				direction = 2;
+			}
+			else
+			{
+				direction = 3;
+			}
 		}
 		else
+			direction = 2;
+
+		switch (direction)
 		{
-			d = d + 4 * (x - y) + 10;
+		case 1:
+			x++;
+			d += 2 * x + 1;
+			break;
+		case 2:
+			x++;
 			y--;
+			d += 2 * (x - y + 1);
+			break;
+		case 3:
+			y--;
+			d += (-2 * y + 1);
+			break;
 		}
-		x++;
-		glBegin(GL_POINTS);
-		glVertex2i(x + xc, y + yc);
-		glVertex2i(y + xc, x + yc);
-		glVertex2i(y + xc, -x + yc);
-		glVertex2i(x + xc, -y + yc);
-		glVertex2i(-x + xc, -y + yc);
-		glVertex2i(-y + xc, -x + yc);
-		glVertex2i(-x + xc, y + yc);
-		glVertex2i(-y + xc, x + yc);
-		glEnd();
 	}
 }
 
-static int times = 0;
 
-void myDisplay(void)
+void myDisplay()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	int n = 100;// 线的条数
-	times++;
-	if (times > 100) {
-		times = 0;
-	}
 	for (int i = 0; i < n; i++)
 	{
 		//lineOpenGL(400, 250, 200*cos(2*PI/n*i)+400, 200*sin(2*PI/n*i)+250);
