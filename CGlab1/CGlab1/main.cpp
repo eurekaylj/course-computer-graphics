@@ -123,7 +123,7 @@ int main(int argc, char** argv) {
     // 窗口大小
     glutInitWindowSize(500, 500);
     // 窗口标题
-    glutCreateWindow("CG_Lab_1");
+    glutCreateWindow("CGlab1");
     // 注册渲染函数，这意味着当GLUT没有执行任何其他操作时，它将调用此函数
     glutIdleFunc(renderScene);
     // 显示渲染函数
