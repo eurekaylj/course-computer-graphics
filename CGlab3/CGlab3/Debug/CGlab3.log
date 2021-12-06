@@ -1,8 +1,1 @@
-﻿  main.cpp
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(38,49): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(38,20): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(114,21): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(114,17): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(114,13): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(114,9): warning C4244: 'argument': conversion from 'double' to 'int', possible loss of data
-  CGlab3.vcxproj -> D:\Workbench\course-computer-graphics\CGlab3\Debug\CGlab3.exe
+﻿  CGlab3.vcxproj -> D:\Workbench\course-computer-graphics\CGlab3\Debug\CGlab3.exe
