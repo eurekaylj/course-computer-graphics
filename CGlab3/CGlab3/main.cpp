@@ -1,158 +1,176 @@
-#include <GL/glut.h>
-#include <math.h>
-#define PI 3.14159
-#define XL 200
-#define XR 400
-#define YU 400
-#define YD 200
+#include<gl/glut.h>
+#include<stdio.h>
+#include<stdlib.h>
 
-void init()
-{
-    // 设置背景色为白色 不透明度为0
-    glClearColor(1.0, 1.0, 1.0, 0.0);
-    // 初始化
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    // 设定投射画图的空间范围gluOrtho2D()以及glOrtho()等等
-    // 这里决定后边用比例值画图还是整数值画图
-    gluOrtho2D(0.0, 600, 0.0, 600);
-    glClear(GL_COLOR_BUFFER_BIT);
+#define LEFT_EDGE 1
+#define RIGHT_EDGE 2
+#define BOTTOM_EDGE 4
+#define TOP_EDGE 8
+
+struct Rectangle {
+	float xmin, xmax, ymin, ymax;
+};
+
+// 裁剪矩形
+struct Rectangle rect;
+// 裁剪线段
+int x0, y0, x1, y1;
+
+// 构造直线
+void lineOpenGL(int x0, int y0, int x1, int y1) { 
+	glBegin(GL_LINES);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex2f(x0, y0);
+	glColor3f(0.0f, 0.0f, 0.0f);
+	glVertex2f(x1, y1);
+	glEnd();
 }
-
-// OpenGL画点
-void point(int x, int  y) {
-    glBegin(GL_POINTS);
-    glVertex2i(x, y);
-    glEnd();
-    glFlush();
-}
-
-// OpenGL画圆
-void circle(double x, double y)
-{
-    int n = 150;
-    double R = 15;
-    for (int i = 0; i < 150; i++)
-    {
-        glColor3i(0, 1, 0);
-        point(x + R * cos(2 * PI * i / n), y + R * sin(2 * PI * i / n));
-    }
-}
-
-void DDA(int x1, int y1, int x2, int y2) {
-    int k, i;
-    float x, y, dx, dy;
-    k = abs(x2 - x1);
-    if (abs(y2 - y1) > k)
-        k = abs(y2 - y1);
-    //直线被划分为每一小段的长度
-    dx = float(x2 - x1) / k;
-    dy = float(y2 - y1) / k;
-    x = float(x1);
-    y = float(y1);
-    for (i = 0; i < k; i++) {
-        point(int(x + 0.5), int(y + 0.5));
-        x = x + dx;
-        y = y + dy;
-    }
-}
-
 
 // 编码
-int makecode(double x, double y)
-{
-    int c = 0;
-    if (x < XL) c = 1;
-    else if (x > XR) c = 2;
-    if (y < YD) c = c + 4;
-    else if (y > YU) c = c + 8;
-    return c;
+int CompCode(int x, int y, struct Rectangle rect) {
+	int code = 0x00;
+	if (y < rect.ymin)
+		code = code | 4;
+	if (y > rect.ymax)
+		code = code | 8;
+	if (x > rect.xmax)
+		code = code | 2;
+	if (x < rect.xmin)
+		code = code | 1;
+	return code;
 }
 
 // 基于编码的Cohen-Sutherland剪裁算法
-void Cohen_Sutherland(double x0, double y0, double x2, double y2)
+int cohensutherlandlineclip(struct Rectangle rect, int& x0, int& y0, int& x1, int& y1)
 {
-    int c, c0, c1;
-    double x, y;
-    // 给两个端点编码
-    c0 = makecode(x0, y0);
-    c1 = makecode(x2, y2);
+	int accept, done;
+	float x, y;
+	accept = 0;
+	done = 0;
 
-    // 若c0 | c1 = 0，对应直线段可简取之，否则继续判断
-    while (c0 != 0 || c1 != 0)
-    {
-        // 若c0 & c1 ！= 0， 对应直线段可简弃之
-        if ((c0 & c1) != 0) break;
-        // 判断第一个顶点
-        c = c0;
-        // 第一个顶点在内部，则判断第二个顶点
-        if (c == 0) c = c1;
-        // 若顶点在左边，则直线段和左边界的交点
-        if ((c & 1) == 1) {
-            y = y0 + (y2 - y0) * (XL - x0) / (x2 - x0);
-            x = XL;
-        }
-        // 若顶点在右边，则求出直线段和右边界的交点
-        else if ((c & 2) == 2) {
-            y = y0 + (y2 - y0) * (XR - x0) / (x2 - x0);
-            x = XR;
-        }
-        // 若顶点在下边，则求出直线段和下边界的交点
-        else if ((c & 4) == 4) {
-            x = x0 + (x2 - x0) * (YD - y0) / (y2 - y0);
-            y = YD;
-        }
-        // 若顶点在上边，则求出直线段和上边界的交点
-        else if ((c & 8) == 8) {
-            x = x0 + (x2 - x0) * (YU - y0) / (y2 - y0);
-            y = YU;
-        }
-        // 用圆标注求出的交点
-        circle(x, y);
+	int code0, code1, codeout;
+	code0 = CompCode(x0, y0, rect);
+	code1 = CompCode(x1, y1, rect);
+	do {
+		// 整条线段在窗口内
+		if (!(code0 | code1)) {
+			// 保留
+			accept = 1;
+			done = 1;
+		}
+		// 两个端点同在窗口一侧
+		else if (code0 & code1)
+			// 舍弃
+			done = 1;
+		// 线段与窗口存在交点
+		else {
+			// 第一个顶点是否在矩形内
+			if (code0 != 0)
+				// 不在就检查第一个点
+				codeout = code0;
+			else
+				// 在就检查第二个点
+				codeout = code1;
+			//求交点
+			// 与左边界与运算为真，求交点
+			if (codeout & LEFT_EDGE) {
+				y = y0 + (y1 - y0) * (rect.xmin - x0) / (x1 - x0);
+				x = (float)rect.xmin;
+			}
+			// 与右边界与运算为真，求交点
+			else if (codeout & RIGHT_EDGE) {
+				y = y0 + (y1 - y0) * (rect.xmax - x0) / (x1 - x0);
+				x = (float)rect.xmax;
+			}
+			// 与下边界与运算为真，求交点
+			else if (codeout & BOTTOM_EDGE) {
+				x = x0 + (x1 - x0) * (rect.ymin - y0) / (y1 - y0);
+				y = (float)rect.ymin;
+			}
+			// 与上边界与运算为真，求交点
+			else if (codeout & TOP_EDGE) { 
+				x = x0 + (x1 - x0) * (rect.ymax - y0) / (y1 - y0);
+				y = (float)rect.ymax;
+			}
+			// 舍弃在窗口外的部分线段
+			if (codeout == code0) {
+				x0 = x; y0 = y;
+				code0 = CompCode(x0, y0, rect);
+			}
+			else
+			{
+				x1 = x; y1 = y;
+				code1 = CompCode(x1, y1, rect);
+			}
+		}
+	} while (!done);
 
-        // 替代第一个顶点
-        if (c == c0) {
-            x0 = x;
-            y0 = y;
-            c0 = makecode(x, y);
-        }
-        // 替代第二个顶点
-        else {
-            x2 = x;
-            y2 = y;
-            c1 = makecode(x, y);
-        }
-
-    }
-    glColor3f(0.0, 1.0, 0.0);
-    DDA(x0, y0, x2, y2);
+	if (accept)
+		lineOpenGL(x0, y0, x1, y1);
+	else {
+		x0 = 0; y = 0; x1 = 0; y1 = 0;
+		lineOpenGL(x0, y0, x1, y1);
+	}
+	return accept;
 }
 
-void display()
-{
-    int x0 = 50, y0 = 110, x1 = 500, y1 = 560;
-    glColor3f(1.0, 0.0, 0.0);
-    DDA(x0, y0, x1, y1);
-
-    glColor3f(0.0, 0.0, 0.0);
-    DDA(XL, 0, XL, 600);
-    DDA(XR, 0, XR, 600);
-    DDA(0, YD, 600, YD);
-    DDA(0, YU, 600, YU);
-
-    Cohen_Sutherland(x0, y0, x1, y1);
-
+// 初始化裁剪模型数据
+void Init() {
+	glClearColor(0.9, 0.9, 0.9, 1);
+	glShadeModel(GL_FLAT);
+	// 矩形数据
+	rect.xmin = 100;
+	rect.xmax = 300;
+	rect.ymin = 100;
+	rect.ymax = 300;
+	// 直线段数据
+	x0 = 500, y0 = 0, x1 = 0, y1 = 300;
 }
 
-int main(int argc, char* argv[])
-{
-    glutInit(&argc, argv);
-    glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
-    glutInitWindowPosition(0, 0);
-    glutInitWindowSize(600, 600);
-    glutCreateWindow("CGlab3");
-    init();
-    glutDisplayFunc(display);
-    glutMainLoop();
-    return 0;
+void myDisplay() {
+	glClear(GL_COLOR_BUFFER_BIT);
+	glColor3f(1.0f, 0.4f, 0.6f);
+	glRectf(rect.xmin, rect.ymin, rect.xmax, rect.ymax);
+	lineOpenGL(x0, y0, x1, y1);
+	glFlush();
+}
+
+void Reshape(int w, int h) {
+	glViewport(0, 0, (GLsizei)w, (GLsizei)h);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0.0, (GLdouble)w, 0.0, (GLdouble)h);
+}
+
+void keyboard(unsigned char key, int x, int y) {
+	switch (key) {
+	case 'c':
+		cohensutherlandlineclip(rect, x0, y0, x1, y1);
+		glutPostRedisplay();
+		break;
+	case 'r':
+		Init();
+		glutPostRedisplay();
+		break;
+	case 'x':
+		exit(0);
+		break;
+	default:
+		break;
+	}
+}
+
+int main(int argc, char* argv[]) {
+	glutInit(&argc, argv);
+	glutInitDisplayMode(GLUT_RGB | GLUT_SINGLE);
+	glutInitWindowPosition(400, 200);
+	glutInitWindowSize(600, 400);
+	glutCreateWindow("CGlab3");
+	Init();
+	glutDisplayFunc(myDisplay);
+	glutReshapeFunc(Reshape);
+	glClearColor(0.9, 0.9, 0.9, 1);
+	glutKeyboardFunc(keyboard);
+	glutMainLoop();
+	return 0;
 }

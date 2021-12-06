@@ -1,1 +1,12 @@
-﻿  CGlab3.vcxproj -> D:\Workbench\course-computer-graphics\CGlab3\Debug\CGlab3.exe
+﻿  main.cpp
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(23,17): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(23,13): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(25,17): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(25,13): warning C4244: 'argument': conversion from 'int' to 'GLfloat', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(97,10): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(97,18): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(102,10): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(102,18): warning C4244: '=': conversion from 'float' to 'int', possible loss of data
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(119,31): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+D:\Workbench\course-computer-graphics\CGlab3\CGlab3\main.cpp(172,31): warning C4305: 'argument': truncation from 'double' to 'GLclampf'
+  CGlab3.vcxproj -> D:\Workbench\course-computer-graphics\CGlab3\Debug\CGlab3.exe
