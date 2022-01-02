@@ -1,2 +1,6 @@
-﻿  sy2.cpp
+﻿  Bezier surface.cpp
+  main.cpp
+D:\Workbench\course-computer-graphics\CGlab4\CGlab4\main.cpp(7,17): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+D:\Workbench\course-computer-graphics\CGlab4\CGlab4\main.cpp(15,21): warning C4305: 'initializing': truncation from 'double' to 'GLfloat'
+  Generating Code...
   CGlab4.vcxproj -> D:\Workbench\course-computer-graphics\CGlab4\Debug\CGlab4.exe

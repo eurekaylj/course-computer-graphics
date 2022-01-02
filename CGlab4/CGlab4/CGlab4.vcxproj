@@ -139,8 +139,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="sy2.cpp" />
+    <ClCompile Include="Bezier surface.cpp" />
+    <ClCompile Include="B-spline curve.cpp" />
+    <ClCompile Include="Bezier curve.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
