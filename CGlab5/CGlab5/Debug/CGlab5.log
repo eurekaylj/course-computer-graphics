@@ -1,2 +1,5 @@
-﻿  sy2.cpp
+﻿  main.cpp
+D:\Workbench\course-computer-graphics\CGlab5\CGlab5\main.cpp(13,22): warning C4101: 'p': unreferenced local variable
+D:\Workbench\course-computer-graphics\CGlab5\CGlab5\main.cpp(12,10): warning C4101: 'args': unreferenced local variable
+D:\Workbench\course-computer-graphics\CGlab5\CGlab5\main.cpp(13,7): warning C4101: 'buffer': unreferenced local variable
   CGlab5.vcxproj -> D:\Workbench\course-computer-graphics\CGlab5\Debug\CGlab5.exe

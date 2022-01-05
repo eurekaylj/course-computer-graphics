@@ -140,7 +140,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="sy1.cpp" />
     <ClCompile Include="sy2.cpp" />
+    <ClCompile Include="sy3.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

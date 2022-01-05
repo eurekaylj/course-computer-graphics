@@ -21,6 +21,12 @@
     <ClCompile Include="sy2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sy1.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sy3.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
